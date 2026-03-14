@@ -1,13 +1,12 @@
 # interoperability-ffi-wasm-react
 
-# Initialize React project
+# Create new project
 - npm create vite@latest interoperability-ffi-wasm-react -- --template react
 - cd interoperability-ffi-wasm-react
 - npm install
-
-# Install package and Wasm plugins
-- npm install @aiamitsuri/interoperability-ffi-wasm@0.1.12
+- npm install @aiamitsuri/interoperability-ffi-wasm@0.1.14
 - npm install -D vite-plugin-wasm vite-plugin-top-level-await
 
-# Run
+# Run existing project
+- npm install
 - npm run dev
