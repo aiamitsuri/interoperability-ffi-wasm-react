@@ -12,12 +12,14 @@ function App() {
       await wasm.default();
 
       const params = {
-        language: "node",
-        integration: "done",
-        crates: "wasm",
-        developmentkit: "app",
-        page: "1",
-        ids: null
+        // language: "node",
+        // integration: "done",
+        // crates: "wasm",
+        // developmentkit: "app",
+        // page: "1",
+        // ids: null,
+		// ids: [1].join(","),
+		ids: [1, 3, 4].join(",")
       };
 
       const data = await wasm.fetch_from_js(params);
