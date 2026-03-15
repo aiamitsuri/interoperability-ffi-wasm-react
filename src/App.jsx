@@ -5,51 +5,66 @@ function App() {
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
 
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
       await wasm.default();
-
       const params = {
-        // language: "node",
-        // integration: "done",
-        // crates: "wasm",
-        // developmentkit: "app",
-        // page: "1",
-        // ids: null,
-		// ids: [1].join(","),
-		ids: [1, 3, 4].join(",")
+        language: null,
+        integration: null,
+        crates: null,
+        developmentkit: null,
+        page: page.toString(),
+        ids: null,
       };
-
       const data = await wasm.fetch_from_js(params);
-      console.log("Data received from Rust:", data);
       setResults(data);
     } catch (err) {
-      console.error("Wasm Error:", err);
       setError(err.toString());
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
+  const handleNext = () => setPage((prev) => prev + 1);
+  const handlePrev = () => setPage((prev) => Math.max(prev - 1, 1));
+
   if (loading && !results) return <p>🚀 Initializing Rust Wasm...</p>;
-  if (error) return <p style={{color: 'red'}}>❌ Error: {error}</p>;
+  if (error) return <p style={{ color: 'red' }}>❌ Error: {error}</p>;
 
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h1>🚩 Interoperability Search</h1>
+      <h1>Interoperability Search</h1>
       
-      <button 
-        onClick={loadData} 
-        disabled={loading}
-        style={{ marginBottom: '20px', padding: '8px 16px', cursor: 'pointer' }}>
-        {loading ? 'Refreshing...' : '🔄 Refresh Data'}
-      </button>
+      <div style={{ marginBottom: '20px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <button onClick={loadData} disabled={loading}>
+          {loading ? 'Refreshing...' : '🔄 Refresh'}
+        </button>
+
+        <button 
+          onClick={handlePrev} 
+          disabled={loading || !results?.pagination?.prev_page_url}
+        >
+          Previous
+        </button>
+
+        <span>
+          Page {results?.pagination?.current_page} of {results?.pagination?.total_pages}
+        </span>
+
+        <button 
+          onClick={handleNext} 
+          disabled={loading || !results?.pagination?.next_page_url}
+        >
+          Next
+        </button>
+      </div>
 
       {results ? (
         <div>
